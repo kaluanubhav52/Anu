@@ -114,9 +114,28 @@ async def _fetch_media_details(media_type: str, media_id: int, api_key=None):
 async def _search_media_id(query: str, api_key=None):
     """Search TMDB for the best matching movie/TV show and return (media_type, media_id)."""
     title, year = _extract_title_and_year(query)
-    params = {'query': title, 'language': 'en-US', 'page': 1, 'include_adult': 'false'}
-    result = await _tmdb_get('search/multi', params=params, api_key=api_key)
-    multi_results = result.get('results', [])
+    multi_results = []
+    words = title.split()
+    
+    # Generate up to 3 fallback queries to minimize API rate limit usage
+    queries_to_try = [title]
+    if len(words) > 2:
+        queries_to_try.append(" ".join(words[:-1]))  # Drop the last word
+        queries_to_try.append(words[0])              # Keep just the first word
+    elif len(words) == 2:
+        queries_to_try.append(words[0])
+        
+    # Remove any duplicates but preserve order, capping at 3 attempts
+    queries_to_try = list(dict.fromkeys(queries_to_try))[:3]
+    
+    for target_query in queries_to_try:
+        if not target_query:
+            continue
+        params = {'query': target_query, 'language': 'en-US', 'page': 1, 'include_adult': 'false'}
+        result = await _tmdb_get('search/multi', params=params, api_key=api_key)
+        multi_results = result.get('results', [])
+        if multi_results:
+            break
 
     def get_ratio(s1, s2):
         if not s1 or not s2:
@@ -125,10 +144,11 @@ async def _search_media_id(query: str, api_key=None):
     scored_results = []
     for r in multi_results:
         ratio = get_ratio(r.get('title') or r.get('name'), title)
-        if ratio >= 0.6:   # 0.85 → 0.6
+        if ratio >= 0.5:   # Lowered from 0.6 to 0.5 to allow for dropped/modified words
             scored_results.append((r, ratio))
+
     if not scored_results:
-        scored_results = [(r, get_ratio(r.get('title') or r.get('name'), title))for r in multi_results[:10]]
+        scored_results = [(r, get_ratio(r.get('title') or r.get('name'), title)) for r in multi_results[:10]]
     today = datetime.utcnow().date()
     candidates_past, candidates_upcoming = [], []
     for r, ratio in scored_results:
@@ -338,6 +358,7 @@ async def get_movie_details(query, bulk=False, id=False, file=None):
         'year': movie.year,
         'genres': listx_to_str(movie.genres),
         'poster': movie.cover_url,
+        'poster_url': movie.cover_url.split("._V1_")[0] + "._V1_SX1280.jpg" if movie.cover_url and "._V1_" in movie.cover_url else movie.cover_url,
         'plot': plot,
         'rating': str(movie.rating),
         "url": movie.url or f"https://www.imdb.com/title/{imdb_id}"
