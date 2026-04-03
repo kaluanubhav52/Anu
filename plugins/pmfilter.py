@@ -1148,24 +1148,20 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "start":
         buttons = [[
-            InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
-            InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info')
-        ],[
-            InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
-        ]]
+                    InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
+                    InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info')
+                ],[
+                     InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
+                ]]
         reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_message_text(
-            text=script.START_TXT.format(
-                query.from_user.mention, 
-                get_status(), 
-                temp.U_NAME, 
-                temp.B_NAME
+        await query.message.edit_media(
+            media=InputMediaPhoto(
+                media=random.choice(PICS),
+                caption=script.START_TXT.format(query.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
+                parse_mode=enums.ParseMode.HTML
             ),
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML,
-            disable_web_page_preview=True
+            reply_markup=reply_markup
         )
-
         await query.answer(MSG_ALRT)
 
     elif query.data == "about":
