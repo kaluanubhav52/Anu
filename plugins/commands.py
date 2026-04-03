@@ -91,19 +91,21 @@ async def start(client, message):
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(message.from_user.id, message.from_user.mention))
     if len(message.command) != 2:
         buttons = [[
-                    InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about', style=enums.ButtonStyle.DANGER),
-                    InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data="premium_info", style=enums.ButtonStyle.SUCCESS)
-                ],[
-                    InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
-                ]]
+            InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
+            InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data="premium_info")
+        ],[
+            InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
+        ]]
+        
         reply_markup = InlineKeyboardMarkup(buttons)
-        m=await message.reply_sticker("CAACAgUAAxkBAAI47WjK1V24t_kyUL-ywJQQdxtaWnaeAAIMFgACpzEZVdpZS0jMvfn5HgQ")
-        await asyncio.sleep(0.4)
+        m = await message.reply_sticker("CAACAgUAAxkBAAI47WjK1V24t_kyUL-ywJQQdxtaWnaeAAIMFgACpzEZVdpZS0jMvfn5HgQ")
+        await asyncio.sleep(2)
         await m.delete()        
         await message.reply_text(
             text=script.START_TXT.format(message.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
+            disable_web_page_preview=True  
         )
         return
     if message.command[1].startswith("reff_"):
