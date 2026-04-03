@@ -1276,16 +1276,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ],[            
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ', callback_data='start')
         ]]
-        reply_markup = InlineKeyboardMarkup(btn)                        
-        await query.message.reply_media(
-            media=InputMediaPhoto(
-                media=random.choice(PICS),
-                caption=script.PREMIUM_INFO,
-                parse_mode=enums.ParseMode.HTML
-            ),
-            reply_markup=reply_markup
+        reply_markup = InlineKeyboardMarkup(btn)
+        await query.message.reply_photo(
+            photo=random.choice(PICS),
+            caption=script.PREMIUM_INFO,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
         )
-
     elif query.data == "buy_info":
         btn = [[
             InlineKeyboardButton('ꜱᴛᴀʀ 🌟', callback_data='star_info'),
