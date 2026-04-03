@@ -1279,16 +1279,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.reply_photo(
             photo=random.choice(PICS),
-            caption=script.PREMIUM_INFO,
+            caption=script.PREMIUM_TEXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )
     elif query.data == "buy_info":
         btn = [[
-            InlineKeyboardButton('ꜱᴛᴀʀ 🌟', callback_data='star_info'),
             InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info')
         ],[
-            InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium_info')
+            InlineKeyboardButton('⭕ Close ⭕', callback_data='close_data')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.edit_media(
@@ -1311,23 +1310,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
             media=InputMediaPhoto(
                 media=random.choice(PICS),
                 caption=script.PREMIUM_UPI_TEXT,
-                parse_mode=enums.ParseMode.HTML
-            ),
-            reply_markup=reply_markup
-        )
-
-    elif query.data == "star_info":
-        btn = [
-            InlineKeyboardButton(f"{stars} ⭐", callback_data=f"buy_{stars}")
-            for stars, days in STAR_PREMIUM_PLANS.items()
-            ]
-        buttons = [btn[i:i + 2] for i in range(0, len(btn), 2)]
-        buttons.append([InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="buy_info")])
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_media(
-            media=InputMediaPhoto(
-                media=random.choice(PICS),
-                caption=script.PREMIUM_STAR_TEXT,
                 parse_mode=enums.ParseMode.HTML
             ),
             reply_markup=reply_markup
