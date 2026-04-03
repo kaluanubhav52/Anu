@@ -101,7 +101,7 @@ async def start(client, message):
         await asyncio.sleep(0.4)
         await m.delete()        
         await message.reply_text(
-            caption=script.START_TXT.format(message.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
+            text=script.START_TXT.format(message.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )
