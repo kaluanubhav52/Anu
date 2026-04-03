@@ -1147,24 +1147,24 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await tb.delete()
 
     elif query.data == "start":
-    buttons = [[
-        InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
-        InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info')
-    ],[
-        InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
-    ]]
-    reply_markup = InlineKeyboardMarkup(buttons)
-    await query.message.edit_message_text(
-        text=script.START_TXT.format(
-            query.from_user.mention, 
-            get_status(), 
-            temp.U_NAME, 
-            temp.B_NAME
-        ),
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML,
-        disable_web_page_preview=True
-    )
+        buttons = [[
+            InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
+            InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info')
+        ],[
+            InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_message_text(
+            text=script.START_TXT.format(
+                query.from_user.mention, 
+                get_status(), 
+                temp.U_NAME, 
+                temp.B_NAME
+            ),
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML,
+            disable_web_page_preview=True
+        )
 
         await query.answer(MSG_ALRT)
 
