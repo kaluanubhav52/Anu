@@ -1154,14 +1154,12 @@ async def cb_handler(client: Client, query: CallbackQuery):
                      InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
                 ]]
         reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_media(
-            media=InputMediaPhoto(
-                media=random.choice(PICS),
-                caption=script.START_TXT.format(query.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
+        await query.message.edit_text(
+                text=script.START_TXT.format(query.from_user.mention, get_status(), temp.U_NAME, temp.B_NAME),
                 parse_mode=enums.ParseMode.HTML
             ),
             reply_markup=reply_markup
-        )
+        
         await query.answer(MSG_ALRT)
 
     elif query.data == "about":
