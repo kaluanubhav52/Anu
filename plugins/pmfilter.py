@@ -1286,8 +1286,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "buy_info":
         btn = [[
             InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info', style=enums.ButtonStyle.SUCCESS)
-        ],[
-            InlineKeyboardButton('⭕ Close ⭕', callback_data='close_data', style=enums.ButtonStyle.DANGER)
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.edit_media(
@@ -1302,8 +1300,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "upi_info":
         btn = [[
             InlineKeyboardButton('📲 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ 📲', user_id=int(OWNER))
-        ],[
-            InlineKeyboardButton('⭕ Close ⭕', callback_data='close_data', style=enums.ButtonStyle.DANGER)
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.edit_media(
