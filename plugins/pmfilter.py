@@ -686,40 +686,40 @@ async def cb_handler(client: Client, query: CallbackQuery):
         except:
             pass
 
-@Client.on_callback_query()
-async def cb_handler(client: Client, query: CallbackQuery):
-    lazyData = query.data
-    try:
-        link = await client.create_chat_invite_link(int(REQST_CHANNEL))
-    except Exception:
-        pass
-    if query.data == "close_data":
-        await query.message.delete()     
-        
-    if query.data.startswith("file"):
-        ident, file_id = query.data.split("#")
-        user = query.message.reply_to_message.from_user.id
-        if int(user) != 0 and query.from_user.id != int(user):
-            return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-        await query.answer(url=f"https://t.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")          
-                            
-    elif query.data.startswith("sendfiles"):
-        clicked = query.from_user.id
-        ident, key = query.data.split("#") 
-        try:
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
-            return
-        except UserIsBlocked:
-            await query.answer('Uɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ ᴍᴀʜɴ !', show_alert=True)
-        except PeerIdInvalid:
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
-        except Exception as e:
-            LOGGER.error(e)
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
-            
-
     elif query.data == "pages":
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
+        
+        if query.data.startswith("file"):
+        ident, file_id = query.data.split("#")
+
+        user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
+        if int(user) != 0 and query.from_user.id != int(user):
+            return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
+        
+        # FIX: Agar bot direct message bhej sakta hai toh seedha bhej dega
+        try:
+            # Bot ko PM mein message bhejne ki koshish
+            await query.answer(url=f"t.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
+        except Exception as e:
+            logger.error(f"Error in file callback: {e}")
+            await query.answer("Something went wrong, please try again.")
+
+    elif query.data.startswith("sendfiles"):
+        clicked = query.from_user.id
+        ident, key = query.data.split("#")
+
+        if not await db.has_premium_access(clicked):
+            await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
+            return
+
+        try:
+            # FIX: Kurigram mein link format thoda clean rakhein
+            btn_url = f"https://t.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}"
+            await query.answer(url=btn_url)
+        except Exception as e:
+            logger.exception(e)
+            await query.answer("ᴇʀʀᴏʀ: ᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ɪɴ ᴘᴍ ꜰɪʀsᴛ!", show_alert=True)
+            
 
     
     elif query.data.startswith("autofilter_delete"):
