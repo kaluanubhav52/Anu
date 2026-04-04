@@ -688,21 +688,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "pages":
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
-        
-        if query.data.startswith("file"):
-        ident, file_id = query.data.split("#")
 
+    if query.data.startswith("file"):
+        ident, file_id = query.data.split("#")
         user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
         if int(user) != 0 and query.from_user.id != int(user):
             return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-        
-        # FIX: Agar bot direct message bhej sakta hai toh seedha bhej dega
-        try:
-            # Bot ko PM mein message bhejne ki koshish
-            await query.answer(url=f"t.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
-        except Exception as e:
-            logger.error(f"Error in file callback: {e}")
-            await query.answer("Something went wrong, please try again.")
+        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
 
     elif query.data.startswith("sendfiles"):
         clicked = query.from_user.id
@@ -712,16 +704,18 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
             return
 
+        settings = await get_settings(query.message.chat.id)
         try:
-            # FIX: Kurigram mein link format thoda clean rakhein
-            btn_url = f"https://t.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}"
-            await query.answer(url=btn_url)
+            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
+            return
+        except UserIsBlocked:
+            await query.answer("ᴜɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ !", show_alert=True)
+        except PeerIdInvalid:
+            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
         except Exception as e:
             logger.exception(e)
-            await query.answer("ᴇʀʀᴏʀ: ᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ɪɴ ᴘᴍ ꜰɪʀsᴛ!", show_alert=True)
-            
+            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
 
-    
     elif query.data.startswith("autofilter_delete"):
         await Media.collection.drop()
         if MULTIPLE_DB:    
