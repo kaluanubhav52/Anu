@@ -6,7 +6,7 @@ from info import *
 from utils import get_seconds, temp
 from database.users_chats_db import db 
 import asyncio
-from pyrogram import Client, filters 
+from pyrogram import Client, filters, enums
 from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 from pyrogram.types import *
 
@@ -46,7 +46,7 @@ async def myplan(client, message):
             await message.reply_photo(
                 photo=random.choice(PICS), 
                 caption=caption,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔥 ᴇxᴛᴇɴᴅ ᴘʟᴀɴ", callback_data="premium")]])
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔥 ᴇxᴛᴇɴᴅ ᴘʟᴀɴ", callback_data="premium", style=enums.ButtonStyle.PRIMARY)]])
             )
         else:
             if IS_FILE_LIMIT:
@@ -58,7 +58,7 @@ async def myplan(client, message):
             await message.reply_photo(
                 photo=random.choice(PICS), 
                 caption=caption,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("💎 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💎", callback_data='premium')]])
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("💎 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💎", callback_data='premium', style=enums.ButtonStyle.PRIMARY)]])
             )
     except Exception as e:
         print(e)
@@ -149,9 +149,9 @@ async def plan(client, message):
         f"<b><u>🚫 ᴛʜɪs ᴜsᴇʀs ᴛʀʏ ᴛᴏ ᴄʜᴇᴄᴋ /plan</u> {temp.B_LINK}\n\n"
         f"- ɪᴅ - `{user_id}`\n- ɴᴀᴍᴇ - {users}</b>")
     btn = [[
-            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info'),
+            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info', style=enums.ButtonStyle.PRIMARY),
         ],[
-            InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
+            InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data', style=enums.ButtonStyle.DANGER)
         ]]
     msg = await message.reply_photo(
         photo=random.choice(PICS),
