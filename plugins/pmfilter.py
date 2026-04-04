@@ -1227,7 +1227,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "group_cmds":
         buttons = [[
-            InlineKeyboardButton('🔰 ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ 🔰', url=f'http://telegram.me/{temp.U_NAME}?startgroup=true', style=enums.ButtonStyle.PRIMARY)
+            InlineKeyboardButton('🔰 ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ 🔰', url=f'http://telegram.me/{temp.U_NAME}?startgroup=true')
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='controlpanel')
         ]]
@@ -1253,7 +1253,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://t.me/paymentbyAnubhav/474')
+                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://TechifyBots.github.io/PayWeb')
             ],[
                 InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='about')
             ]]
@@ -1276,16 +1276,22 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ],[            
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ', callback_data='start')
         ]]
-        reply_markup = InlineKeyboardMarkup(btn)
-        await query.message.reply_photo(
-            photo=random.choice(PICS),
-            caption=script.PREMIUM_TEXT,
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+        reply_markup = InlineKeyboardMarkup(btn)                        
+        await query.message.edit_media(
+            media=InputMediaPhoto(
+                media=random.choice(PICS),
+                caption=script.PREMIUM_INFO,
+                parse_mode=enums.ParseMode.HTML
+            ),
+            reply_markup=reply_markup
         )
+
     elif query.data == "buy_info":
         btn = [[
-            InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info', style=enums.ButtonStyle.SUCCESS)
+            InlineKeyboardButton('ꜱᴛᴀʀ 🌟', callback_data='star_info'),
+            InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info')
+        ],[
+            InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium_info')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.edit_media(
@@ -1300,12 +1306,31 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "upi_info":
         btn = [[
             InlineKeyboardButton('📲 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ 📲', user_id=int(OWNER))
+        ],[
+            InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='buy_info')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.edit_media(
             media=InputMediaPhoto(
                 media=random.choice(PICS),
                 caption=script.PREMIUM_UPI_TEXT,
+                parse_mode=enums.ParseMode.HTML
+            ),
+            reply_markup=reply_markup
+        )
+
+    elif query.data == "star_info":
+        btn = [
+            InlineKeyboardButton(f"{stars} ⭐", callback_data=f"buy_{stars}")
+            for stars, days in STAR_PREMIUM_PLANS.items()
+            ]
+        buttons = [btn[i:i + 2] for i in range(0, len(btn), 2)]
+        buttons.append([InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="buy_info")])
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_media(
+            media=InputMediaPhoto(
+                media=random.choice(PICS),
+                caption=script.PREMIUM_STAR_TEXT,
                 parse_mode=enums.ParseMode.HTML
             ),
             reply_markup=reply_markup
@@ -1350,7 +1375,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_media(
             media=InputMediaPhoto(
                 media=random.choice(PICS),
-                caption=script.PREMIUM_TEXT,
+                caption=script.PREMIUM_INFO,
                 parse_mode=enums.ParseMode.HTML
             ),
             reply_markup=reply_markup
