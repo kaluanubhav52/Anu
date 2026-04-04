@@ -1253,7 +1253,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://TechifyBots.github.io/PayWeb')
+                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://t.me/pratilipifm0900')
             ],[
                 InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='about')
             ]]
@@ -1270,9 +1270,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "premium_info":
         btn = [[
             InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info')
-        ],[
-            InlineKeyboardButton('ʀᴇꜰᴇʀ ꜰʀɪᴇɴᴅꜱ 🎁', callback_data='referral'),
-            InlineKeyboardButton('ꜰʀᴇᴇ ᴛʀɪᴀʟ ✨', callback_data='free_trial')
         ],[            
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ', callback_data='start')
         ]]
@@ -1288,7 +1285,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "buy_info":
         btn = [[
-            InlineKeyboardButton('ꜱᴛᴀʀ 🌟', callback_data='star_info'),
             InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info')
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium_info')
