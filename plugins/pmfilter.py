@@ -1315,23 +1315,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
             reply_markup=reply_markup
         )
 
-    elif query.data == "star_info":
-        btn = [
-            InlineKeyboardButton(f"{stars} ⭐", callback_data=f"buy_{stars}")
-            for stars, days in STAR_PREMIUM_PLANS.items()
-            ]
-        buttons = [btn[i:i + 2] for i in range(0, len(btn), 2)]
-        buttons.append([InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="buy_info")])
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_media(
-            media=InputMediaPhoto(
-                media=random.choice(PICS),
-                caption=script.PREMIUM_STAR_TEXT,
-                parse_mode=enums.ParseMode.HTML
-            ),
-            reply_markup=reply_markup
-        )
-
     elif query.data == "ref_point":
         await query.answer(f'ʀᴇꜰᴇʀʀᴀʟ ᴘᴏɪɴᴛꜱ: {referdb.get_refer_points(query.from_user.id)}', show_alert=True)
 
@@ -1361,9 +1344,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "premium":
         btn = [[
             InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info')
-        ],[
-            InlineKeyboardButton('ʀᴇꜰᴇʀ ꜰʀɪᴇɴᴅꜱ 🎁', callback_data='referral'),
-            InlineKeyboardButton('ꜰʀᴇᴇ ᴛʀɪᴀʟ ✨', callback_data='free_trial')
         ],[            
             InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
         ]]
