@@ -1148,10 +1148,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "start":
         buttons = [[
-                    InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about'),
-                    InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info')
-                ],[
-                     InlineKeyboardButton('🌸 ᴀɴɪᴍᴇ ɢᴜɪᴅᴇ 🌸', user_id=int(OWNER))
+                    InlineKeyboardButton('ᴀʙᴏᴜᴛ 📜', callback_data='about', style=enums.ButtonStyle.PRIMARY),
+                    InlineKeyboardButton('ᴜᴘɢʀᴀᴅᴇ 🎟', callback_data='premium_info', style=enums.ButtonStyle.DANGER)
                 ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_media(
@@ -1169,7 +1167,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             InlineKeyboardButton('⚙️ ᴄᴏɴᴛʀᴏʟ ᴘᴀɴᴇʟ ⚙️', callback_data='controlpanel')
         ],[
             InlineKeyboardButton('ᴅᴍᴄᴀ 📝', callback_data='dmca'),
-            InlineKeyboardButton ('ᴅᴏɴᴀᴛᴇ 💰', callback_data='donate')
+            InlineKeyboardButton ('ᴅᴏɴᴀᴛᴇ 💰', callback_data='donate', style=enums.ButtonStyle.PRIMARY)
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ', callback_data='start')
         ]]
@@ -1227,7 +1225,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "group_cmds":
         buttons = [[
-            InlineKeyboardButton('🔰 ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ 🔰', url=f'http://telegram.me/{temp.U_NAME}?startgroup=true')
+            InlineKeyboardButton('🔰 ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ 🔰', url=f'http://telegram.me/{temp.U_NAME}?startgroup=true', style=enums.ButtonStyle.PRIMARY)
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='controlpanel')
         ]]
@@ -1253,7 +1251,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://t.me/pratilipifm0900')
+                InlineKeyboardButton('💳 ᴅᴏɴᴀᴛᴇ ɴᴏᴡ 💳', url='https://t.me/pratilipifm0900', style=enums.ButtonStyle.PRIMARY)
             ],[
                 InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='about')
             ]]
@@ -1269,7 +1267,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "premium_info":
         btn = [[
-            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info')
+            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info', style=enums.ButtonStyle.PRIMARY)
         ],[            
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ', callback_data='start')
         ]]
@@ -1285,7 +1283,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "buy_info":
         btn = [[
-            InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info')
+            InlineKeyboardButton('ᴜᴘɪ 💳', callback_data='upi_info', style=enums.ButtonStyle.SUCCESS)
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium_info')
         ]]
@@ -1301,7 +1299,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "upi_info":
         btn = [[
-            InlineKeyboardButton('📲 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ 📲', user_id=int(OWNER))
+            InlineKeyboardButton('📲 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ 📲', user_id=int(OWNER, style=enums.ButtonStyle.PRIMARY))
         ],[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='buy_info')
         ]]
@@ -1343,9 +1341,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "premium":
         btn = [[
-            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info')
+            InlineKeyboardButton('💎 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 💎', callback_data='buy_info', style=enums.ButtonStyle.PRIMARY)
         ],[            
-            InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
+            InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data', style=enums.ButtonStyle.DANGER)
         ]]
         reply_markup = InlineKeyboardMarkup(btn)                        
         await query.message.edit_media(
