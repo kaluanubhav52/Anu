@@ -701,9 +701,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
     # बिना किसी रिप्लाई के सीधा URL पर रीडायरेक्ट करेगा
     await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
 
-elif query.data.startswith("sendfiles"):
-    clicked = query.from_user.id
-    ident, key = query.data.split("#")
+    elif query.data.startswith("sendfiles"):
+        clicked = query.from_user.id
+        ident, key = query.data.split("#")
 
     if not await db.has_premium_access(clicked):
         # प्रीमियम चेक के लिए भी सिर्फ अलर्ट (No Reply)
