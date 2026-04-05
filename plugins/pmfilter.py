@@ -690,9 +690,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
 
     if query.data.startswith("file"):
-    ident, file_id = query.data.split("#")
+        ident, file_id = query.data.split("#")
     # यहाँ हम check कर रहे हैं कि बटन किसने दबाया
-    user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
+        user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
     
     if int(user) != 0 and query.from_user.id != int(user):
         # यह सिर्फ एक अलर्ट दिखाएगा, मैसेज रिप्लाई नहीं करेगा
