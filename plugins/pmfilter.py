@@ -696,10 +696,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
     
     if int(user) != 0 and query.from_user.id != int(user):
         # यह सिर्फ एक अलर्ट दिखाएगा, मैसेज रिप्लाई नहीं करेगा
-        return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-        
+        await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
+        return 
     # बिना किसी रिप्लाई के सीधा URL पर रीडायरेक्ट करेगा
-    await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
+        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
 
     elif query.data.startswith("sendfiles"):
         clicked = query.from_user.id
