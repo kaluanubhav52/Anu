@@ -76,7 +76,7 @@ async def pm_text(bot, message):
             pass
     if not await db.is_user_exist(user_id):
         await db.add_user(user_id, message.from_user.first_name)
-        await client.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(user_id, user))
+        await bot.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(user_id, user))
 
     if content.startswith(("#")):
         return
