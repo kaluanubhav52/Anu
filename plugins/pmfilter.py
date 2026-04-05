@@ -714,6 +714,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         except Exception as e:
             logger.error(f"Callback Answer Error: {e}")
             await query.answer("ᴇʀʀᴏʀ: ᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ɪɴ ᴘᴍ!", show_alert=True)
+            return 
 
     elif query.data.startswith("sendfiles"):
         clicked = query.from_user.id
@@ -729,6 +730,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer(url=btn_url)
         except Exception:
             await query.answer("sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ, ᴛʀʏ ᴀɢᴀɪɴ!", show_alert=True)
+            return 
 
     elif query.data.startswith("autofilter_delete"):
         await Media.collection.drop()
