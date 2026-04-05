@@ -691,38 +691,45 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     if query.data.startswith("file"):
         ident, file_id = query.data.split("#")
-    # यहाँ हम check कर रहे हैं कि बटन किसने दबाया
-        user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
-    
-    if int(user) != 0 and query.from_user.id != int(user):
-        # यह सिर्फ एक अलर्ट दिखाएगा, मैसेज रिप्लाई नहीं करेगा
-        await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-        return 
-    # बिना किसी रिप्लाई के सीधा URL पर रीडायरेक्ट करेगा
-        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
+        
+        # User checking logic (Reference point ke mutabiq)
+        try:
+            user = query.message.reply_to_message.from_user.id
+        except:
+            # Agar reply message nahi milta toh current user ko owner maano
+            user = query.from_user.id
+            
+        if int(user) != 0 and query.from_user.id != int(user):
+            return await query.answer(
+                f"Hello {query.from_user.first_name},\nDon't Click Other Results!", 
+                show_alert=True
+            )
+        
+        # Link Generation - Isme humne link thoda clean rakha hai
+        btn_url = f"https://t.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}"
+        
+        try:
+            # Kurigram mein URL answer karne ka sahi tarika
+            await query.answer(url=btn_url)
+        except Exception as e:
+            logger.error(f"Callback Answer Error: {e}")
+            await query.answer("ᴇʀʀᴏʀ: ᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ɪɴ ᴘᴍ!", show_alert=True)
+        return  # Fix: prevent double query.answer call at line 1423
 
     elif query.data.startswith("sendfiles"):
         clicked = query.from_user.id
         ident, key = query.data.split("#")
 
-    if not await db.has_premium_access(clicked):
-        # प्रीमियम चेक के लिए भी सिर्फ अलर्ट (No Reply)
-        await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
-        return
+        if not await db.has_premium_access(clicked):
+            await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
+            return
 
-    settings = await get_settings(query.message.chat.id)
-    try:
-        # यहाँ भी सीधा redirection है
-        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
-        return
-    except UserIsBlocked:
-        await query.answer("ᴜɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ !", show_alert=True)
-    except PeerIdInvalid:
-        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
-    except Exception as e:
-        logger.exception(e)
-        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
-
+        # Premium users ke liye Stylish Link
+        try:
+            btn_url = f"https://t.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}"
+            await query.answer(url=btn_url)
+        except Exception:
+            await query.answer("sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ, ᴛʀʏ ᴀɢᴀɪɴ!", show_alert=True)
 
     elif query.data.startswith("autofilter_delete"):
         await Media.collection.drop()
@@ -1492,12 +1499,7 @@ async def auto_filter(client, msg, spoll=False):
         temp.SHORT[message.from_user.id] = message.chat.id
         if settings.get('button'):
             btn = [
-                [
-                    InlineKeyboardButton(
-                        text=f"{get_size(file.file_size)} ≽ {clean_filename(file.file_name)}", 
-                        callback_data=f"file#{file.file_id}"
-                    )
-                ]
+                [InlineKeyboardButton(text=f"{get_size(file.file_size)} ≽ " + clean_filename(file.file_name), callback_data=f'file#{file.file_id}')]
                 for file in files
             ]
             if offset != "":
