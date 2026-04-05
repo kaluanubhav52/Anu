@@ -689,47 +689,29 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "pages":
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
 
-    if query.data.startswith("file"):
-        ident, file_id = query.data.split("#")
-        
-        # User checking logic (Reference point ke mutabiq)
-        try:
-            user = query.message.reply_to_message.from_user.id
-        except:
-            # Agar reply message nahi milta toh current user ko owner maano
-            user = query.from_user.id
-            
-        if int(user) != 0 and query.from_user.id != int(user):
-            return await query.answer(
-                f"Hello {query.from_user.first_name},\nDon't Click Other Results!", 
-                show_alert=True
-            )
-        
-        # Link Generation - Isme humne link thoda clean rakha hai
-        btn_url = f"https://t.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}"
-        
-        try:
-            # Kurigram mein URL answer karne ka sahi tarika
-            await query.answer(url=btn_url)
-        except Exception as e:
-            logger.error(f"Callback Answer Error: {e}")
-            await query.answer("ᴇʀʀᴏʀ: ᴘʟᴇᴀsᴇ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ɪɴ ᴘᴍ!", show_alert=True)
-        return  # Fix: prevent double query.answer call at line 1423
-
     elif query.data.startswith("sendfiles"):
         clicked = query.from_user.id
         ident, key = query.data.split("#")
-
-        if not await db.has_premium_access(clicked):
-            await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
-            return
-
-        # Premium users ke liye Stylish Link
+        settings = await get_settings(query.message.chat.id)
+        pre = 'allfilesp' if settings['file_secure'] else 'allfiles'
         try:
-            btn_url = f"https://t.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}"
-            await query.answer(url=btn_url)
-        except Exception:
-            await query.answer("sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ, ᴛʀʏ ᴀɢᴀɪɴ!", show_alert=True)
+            if settings['is_shortlink'] and not await db.has_premium_access(query.from_user.id):
+                await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles1_{key}")
+            elif settings['is_shortlink'] and await db.has_premium_access(query.from_user.id):
+                await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start={pre}_{key}")
+                return 
+            else:
+                await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start={pre}_{key}")
+                
+            
+                
+        except UserIsBlocked:
+            await query.answer('Uɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ ᴍᴀʜɴ !', show_alert=True)
+        except PeerIdInvalid:
+            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
+        except Exception as e:
+            logger.exception(e)
+            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
 
     elif query.data.startswith("autofilter_delete"):
         await Media.collection.drop()
