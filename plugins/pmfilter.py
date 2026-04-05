@@ -690,31 +690,38 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
 
     if query.data.startswith("file"):
-        ident, file_id = query.data.split("#")
-        user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
-        if int(user) != 0 and query.from_user.id != int(user):
-            return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
+    ident, file_id = query.data.split("#")
+    # यहाँ हम check कर रहे हैं कि बटन किसने दबाया
+    user = query.message.reply_to_message.from_user.id if query.message.reply_to_message else query.from_user.id
+    
+    if int(user) != 0 and query.from_user.id != int(user):
+        # यह सिर्फ एक अलर्ट दिखाएगा, मैसेज रिप्लाई नहीं करेगा
+        return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
+        
+    # बिना किसी रिप्लाई के सीधा URL पर रीडायरेक्ट करेगा
+    await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file_id}")
 
-    elif query.data.startswith("sendfiles"):
-        clicked = query.from_user.id
-        ident, key = query.data.split("#")
+elif query.data.startswith("sendfiles"):
+    clicked = query.from_user.id
+    ident, key = query.data.split("#")
 
-        if not await db.has_premium_access(clicked):
-            await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
-            return
+    if not await db.has_premium_access(clicked):
+        # प्रीमियम चेक के लिए भी सिर्फ अलर्ट (No Reply)
+        await query.answer("ᴛʜɪs ꜰᴇᴀᴛᴜʀᴇ ɪs ᴏɴʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs.", show_alert=True)
+        return
 
-        settings = await get_settings(query.message.chat.id)
-        try:
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
-            return
-        except UserIsBlocked:
-            await query.answer("ᴜɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ !", show_alert=True)
-        except PeerIdInvalid:
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
-        except Exception as e:
-            logger.exception(e)
-            await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
+    settings = await get_settings(query.message.chat.id)
+    try:
+        # यहाँ भी सीधा redirection है
+        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
+        return
+    except UserIsBlocked:
+        await query.answer("ᴜɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ !", show_alert=True)
+    except PeerIdInvalid:
+        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles3_{key}")
+    except Exception as e:
+        logger.exception(e)
+        await query.answer(url=f"https://telegram.me/{temp.U_NAME}?start=sendfiles4_{key}")
 
 
     elif query.data.startswith("autofilter_delete"):
